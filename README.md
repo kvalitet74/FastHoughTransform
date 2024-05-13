@@ -37,7 +37,7 @@ Now you can run [draw_lines.py](src/draw_lines.py) script via command
 python3 src/draw_lines.py --image=<your image> --output=<path to save image with lines>
 ```
 
-To test run this
+To test manually run this
 ```bash
 python3 src/draw_lines.py -i=./samples/clean/cross.jpg -o=./samples/lines/cross.jpg -q=0.96 -mcs=2 -th=1 -g -l=4
 ```
