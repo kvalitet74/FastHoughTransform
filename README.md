@@ -17,12 +17,12 @@ FatHoughTransform
 # 1. Installation
 Clone this repository to the local system.
 Then install dependencies to your environment.
-```bash 
+```bash
 pip install -r requirements.txt
 ```
 Now you can run [draw_lines.py](src/draw_lines.py) script via command
-```bash 
-python3 src/draw_lines.py --image=<your image> --output=<path to save image with lines> 
+```bash
+python3 src/draw_lines.py --image=<your image> --output=<path to save image with lines>
 ```
 
 To test run this
@@ -36,16 +36,16 @@ Correct output:
 # 2. Usage
 Basic usage
 ```
-usage: draw_lines.py [-h] --image IMAGE 
-[--output OUTPUT] 
-[--quantile QUANTILE] 
-[--min_cluster_size MIN_CLUSTER_SIZE] 
-[--vertical VERTICAL] 
-[--horizontal HORIZONTAL] 
-[--limit LIMIT] 
-[--color COLOR] 
+usage: draw_lines.py [-h] --image IMAGE
+[--output OUTPUT]
+[--quantile QUANTILE]
+[--min_cluster_size MIN_CLUSTER_SIZE]
+[--vertical VERTICAL]
+[--horizontal HORIZONTAL]
+[--limit LIMIT]
+[--color COLOR]
 [--thickness THICKNESS]
-[--gradient] 
+[--gradient]
 [--edge_detection_method {laplacian,sobel}]
 ```
 
@@ -59,14 +59,14 @@ Here is a brief explaination on main options:
 ### --input, -i
 Path to image to find lines in.
 ### --output, -o
-Path to save image with lines. The background is `--input` image. 
+Path to save image with lines. The background is `--input` image.
 Lines are drawn with specified `--thickness` and  `--color`.
 
 If no `--output` specified the script only finds lines and prints them.
 
 ### --quantile, -q
 The lines are found by the brightest pixels of the Hough transform.
-To find them we get top N% points of the transform. 
+To find them we get top N% points of the transform.
 
 `N = (1 - quantile) * 100%`
 
@@ -78,7 +78,7 @@ For example I have horizontal-down Hough Transform for `./samples/clean/umbrella
 <img src="./samples/readme/umbrella_binarized_hough.png" alt="umbrella_hough" style="width:49.5%;"/>
 
 ### --min_cluster_size, -mcs
-Then we clusterize binarized transform by neightbourhood. We get many noise clusters with small amount of pixels. 
+Then we clusterize binarized transform by neightbourhood. We get many noise clusters with small amount of pixels.
 
 `--min_cluster_size` is a minimum size of a cluster to consider it as line presence. To remove noise clusters we requre that cluster must have >=`--min_cluster_size` pixels. It can be number or percentage.
 

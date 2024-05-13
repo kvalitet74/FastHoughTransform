@@ -1,5 +1,5 @@
-opencv-python 
-numpy 
+opencv-python
+numpy
 matplotlib
 argparse
 scipy
