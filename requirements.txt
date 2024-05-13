@@ -3,3 +3,5 @@ numpy
 matplotlib
 argparse
 scipy
+PIL
+cv2

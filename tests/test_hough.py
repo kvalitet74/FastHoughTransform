@@ -1,14 +1,13 @@
 """Test suite for hough.py."""
-import os
-import sys
-sys.path.append(os.path.abspath('.') + "/src")
-print(sys.path)
 
+import os
 import numpy as np
 from PIL import Image
 import pytest
+import sys
 
-from hough import HoughTransform
+sys.path.append(os.path.abspath(".") + "/src")
+from hough import HoughTransform  # noqa E402
 
 
 def test_accepts_only_grayscale():
@@ -30,7 +29,7 @@ def test_accepts_pil_image():
     image = Image.open("samples/clean/cross.jpg")
     try:
         HoughTransform(image)
-    except:
+    except BaseException:
         pytest.fail("Unexpected error occurred!")
 
 
@@ -44,7 +43,7 @@ def test_raises_on_unknown_edge_method():
     """It raises error if provided edge computing method is unknown."""
     ht = HoughTransform(np.zeros((2, 2)))
     with pytest.raises(ValueError):
-        ht.compute_edges_(method='unknown')
+        ht.compute_edges_(method="unknown")
 
 
 def test_transform_returns_array():
@@ -71,10 +70,11 @@ def test_1_pixel_doesnt_produce_nan():
 
 def test_no_lines_on_image_no_crash():
     """It doesn't crash if there are no lines on the image."""
-    ht = HoughTransform("samples/clean/cross.jpg")  # it cannot find any lines in this example
+    ht = HoughTransform("samples/clean/cross.jpg")
+    # it cannot find any lines in this example
     try:
         ht.transform(ht.grayscale_)
-    except:
+    except BaseException:
         pytest.fail("Failed because no lines detected")
 
 
@@ -83,7 +83,7 @@ def test_no_lines_prints_0():
     """It returns and prints 0 if there are no lines on the image."""
     image = np.arange(32 * 32).reshape((32, 32)) / (32 * 32)
     ht = HoughTransform(image)
-    assert len(ht.find_lines()) == 0
+    assert len(ht.find_lines(min_cluster_size=0.01)) == 0
 
 
 # TESTS BELOW ARE TO HIT 100% COVERAGE
@@ -99,7 +99,7 @@ def test_no_image_no_crash():
     ht = HoughTransform("samples/clean/cross.jpg")
     try:
         ht.transform()
-    except:
+    except BaseException:
         pytest.fail("Failed because there is no image")
 
 
@@ -107,7 +107,8 @@ def test_lazy_lines_uses_rotated_images():
     """It stores rotated images and uses them the second time."""
     ht = HoughTransform("samples/clean/cross.jpg")
     ht.find_lines()
-    ht.find_lines()  # second time it should use previous rotations and hit corresponding if statement
+    ht.find_lines()  # second time it should use previous rotations and hit
+    # corresponding if statement
     assert bool(ht.lazy_transforms)
 
 
@@ -141,7 +142,7 @@ def test_rotate_line_90_uses_shape():
     line = [(0, 22.775824131830106, 48, 66.30395979722167), 1.0407061653877145]
     try:
         ht.rotate_line_90_(line)
-    except:
+    except BaseException:
         pytest.fail("Failed because shape was not given")
 
 
