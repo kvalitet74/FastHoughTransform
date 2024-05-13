@@ -1,10 +1,17 @@
+"""
+An implementation of draw_lines.py script to find lines in an image using Fast Hough Transform.
+
+Run python3 draw_lines.py --help to get details
+"""
+
 from pathlib import Path
 from hough import HoughTransform
 from argparse import ArgumentParser
 
 
-def main():
-    parser = ArgumentParser(description="Script to find and draw lines on image.")
+def main() -> None:
+    """The main function of the script."""
+    parser = ArgumentParser(description="A script to find and draw lines in an image.")
     parser.add_argument(
         "--image",
         "-i",

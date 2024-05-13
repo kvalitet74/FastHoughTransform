@@ -1,3 +1,9 @@
+"""
+An implementation of HoughTransform class to compute "fast Hough transform".
+
+There are methods to compute the transform, strictly find lines and draw them on the image.
+"""
+
 import numpy as np
 import pathlib
 from PIL.Image import Image as PIL_Image
@@ -7,15 +13,13 @@ from scipy import ndimage
 
 
 class HoughTransform:
-    """
-    Base class of hough transform. Performs empty transform.
-    """
+    """Base class of hough transform. Performs empty transform."""
 
     def __init__(
         self,
         image: np.ndarray | PIL_Image | str | pathlib.PosixPath | pathlib.WindowsPath,
         compute_edges: str | None = "laplacian",
-    ):
+    ) -> None:
         """
         Initializes with numpy image in grayscale or path to image.
 
@@ -65,15 +69,16 @@ class HoughTransform:
         self.grad_ = self.compute_edges_(method=compute_edges)
         self.shape = self.grayscale_.shape
         # Initialize buffer for lazy computations
-        self.lazy_transforms = {}
+        self.lazy_transforms: dict = {}
 
     ########################
     # --- Main methods --- #
     ########################
 
-    def transform(self, image: np.ndarray = None):
+    def transform(self, image: np.ndarray | None = None) -> np.ndarray:
         """
         Fast Hough Transform for HORIZONTAL DECREASING line detection.
+
         Parameters:
             1) image: it performs transform on this image.
             By default (if None) it is gradient oughTransform.grad_
@@ -118,14 +123,15 @@ class HoughTransform:
 
     def find_lines(
         self,
-        horizontal=True,
-        vertical=True,
-        quantile=0.99,
+        horizontal: bool = True,
+        vertical: bool = True,
+        quantile: float = 0.99,
         min_cluster_size: int | float = 0.001,
-        max_lines=None,
-    ):
+        max_lines: int | None = None,
+    ) -> list[tuple]:
         """
         Finds lines on image.
+
         Parameters:
             1) horizontal: Flag to find horizontal lines
             2) vertical: Flag to find vertical lines
@@ -143,7 +149,7 @@ class HoughTransform:
 
         # To find all lines we need to rotate the image
         # and apply transform (to get lines of any direction)
-        def lazy_lines(name, rotate_times):
+        def lazy_lines(name: str, rotate_times: int) -> list[tuple]:
             if name in self.lazy_transforms:
                 hough = self.lazy_transforms[name]
             else:
@@ -182,14 +188,15 @@ class HoughTransform:
 
     def draw_lines(
         self,
-        image: np.ndarray | PIL_Image = None,
-        lines: list[tuple] = None,
-        color="red",
+        image: np.ndarray | PIL_Image | None = None,
+        lines: list[tuple] | None = None,
+        color: str = "red",
         thickness: int = 5,
-        **find_lines_kwargs,
-    ):
+        **find_lines_kwargs: dict,
+    ) -> PIL_Image:
         """
         Draws found lines on the image.
+
         If argument 'image' is not set uses image from initialization.
 
         Parameters:
@@ -236,8 +243,14 @@ class HoughTransform:
     ###########################
 
     def find_horizontal_down_lines_(
-        self, hough, width, quantile, min_cluster_size, max_clusters=None
-    ):
+        self,
+        hough: np.ndarray,
+        width: int,
+        quantile: float,
+        min_cluster_size: int | float,
+        max_clusters: int | None = None,
+    ) -> list[tuple]:
+        """Finds only lines with positive tan(angle)."""
         # Binarize transform
         quantile_value = float(np.quantile(hough.squeeze(), quantile))
         houghmap = hough >= quantile_value
@@ -255,7 +268,7 @@ class HoughTransform:
         clusters = [c for c in clusters if len(c[0]) >= min_cluster_size]
 
         # Find centroids of clusters: lines that represent clusters.
-        def get_centroid(cluster, power=4):
+        def get_centroid(cluster: list[tuple], power: int = 4) -> tuple:
             points_array = np.array(list(zip(*cluster)))
             centroid = np.average(points_array, weights=hough[cluster] ** power, axis=0)
             return centroid
@@ -271,7 +284,10 @@ class HoughTransform:
             lines.append(((0, x, width, x + y), score))
         return lines
 
-    def rotate_line_90_(self, line, shape=None, times=1):
+    def rotate_line_90_(
+        self, line: tuple, shape: tuple | None = None, times: int = 1
+    ) -> tuple:
+        """Rotates the given line to the given angle by 90 degrees <times> times."""
         if times < 1:
             return line
         if shape is None:
@@ -281,7 +297,10 @@ class HoughTransform:
         line = ((h - y1, x1, h - y2, x2), score)
         return self.rotate_line_90_(line, (w, h), times - 1)
 
-    def compute_edges_(self, method="sobel", sobel_size=5):
+    def compute_edges_(
+        self, method: str | None = "sobel", sobel_size: int = 5
+    ) -> np.ndarray:
+        """Computes an edge map (gradient map) of the image in grayscale."""
         if method == "laplacian":
             return np.abs(cv.Laplacian(self.grayscale_, cv.CV_64F))
         elif method == "sobel":
