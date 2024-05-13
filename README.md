@@ -17,9 +17,21 @@ FatHoughTransform
 # 1. Installation
 Clone this repository to the local system.
 Then install dependencies to your environment.
+### 1. with pip
 ```bash
 pip install -r requirements.txt
 ```
+
+### 2. with poetry
+```bash
+poetry install
+```
+
+To check the compatibility to your system and the correctness of project organization you can use Nox:
+```bash
+nox
+```
+
 Now you can run [draw_lines.py](src/draw_lines.py) script via command
 ```bash
 python3 src/draw_lines.py --image=<your image> --output=<path to save image with lines>
