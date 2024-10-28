@@ -5,4 +5,4 @@ argparse
 scipy
 #PIL
 Pillow
-cv2
+#cv2
