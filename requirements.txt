@@ -3,5 +3,6 @@ numpy
 matplotlib
 argparse
 scipy
-PIL
+#PIL
+Pillow
 cv2
