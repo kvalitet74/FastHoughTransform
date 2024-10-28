@@ -6,7 +6,7 @@ There are methods to compute the transform, strictly find lines and draw them on
 
 import numpy as np
 import pathlib
-from Pillow.Image import Image as PIL_Image
+from Pillow import Image as PIL_Image
 from Pillow import Image, ImageDraw
 import cv2 as cv
 from scipy import ndimage
